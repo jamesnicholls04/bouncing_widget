@@ -18,6 +18,9 @@ class BouncingWidget extends StatefulWidget {
   /// Animation duration
   final Duration duration;
 
+  // Opacity reduction factor
+  final double opacityReductionFactor;
+
   /// Whether the animation can revers or not
   final bool stayOnBottom;
 
@@ -26,6 +29,7 @@ class BouncingWidget extends StatefulWidget {
     Key? key,
     required this.child,
     required this.onPressed,
+    this.opacityReductionFactor = 0,
     this.scaleFactor = 1,
     this.duration = const Duration(milliseconds: 200),
     this.stayOnBottom = false,
@@ -112,10 +116,13 @@ class _BouncingWidgetState extends State<BouncingWidget>
       onVerticalDragEnd: _onDragEnd,
       onHorizontalDragUpdate: (details) => _onDragUpdate(details, context),
       onVerticalDragUpdate: (details) => _onDragUpdate(details, context),
-      child: Transform.scale(
-        key: _childKey,
-        scale: _scale,
-        child: child,
+      child: Opacity(
+        opacity: 1 - widget.opacityReductionFactor * _controller.value,
+        child: Transform.scale(
+          key: _childKey,
+          scale: _scale,
+          child: child,
+        ),
       ),
     );
   }
