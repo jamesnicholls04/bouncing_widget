@@ -24,11 +24,14 @@ class BouncingWidget extends StatefulWidget {
   /// Whether the animation can revers or not
   final bool stayOnBottom;
 
+  final ScrollController? scrollController;
+
   /// BouncingWidget constructor
   const BouncingWidget({
     Key? key,
     required this.child,
     required this.onPressed,
+    this.scrollController,
     this.opacityReductionFactor = 0,
     this.scaleFactor = 1,
     this.duration = const Duration(milliseconds: 200),
@@ -153,6 +156,12 @@ class _BouncingWidgetState extends State<BouncingWidget>
   _onDragUpdate(DragUpdateDetails details, BuildContext context) {
     final Offset touchPosition = details.globalPosition;
     _isOutside = _isOutsideChildBox(touchPosition);
+
+    if (widget.scrollController != null) {
+      (widget.scrollController as ScrollController).jumpTo(
+          (widget.scrollController as ScrollController).offset -
+              details.delta.dy);
+    }
   }
 
   /// When this callback is triggered, we reverse the animation
